@@ -11,8 +11,26 @@ from WumpusWorld import *
 
 def main():
     world = WumpusWorld(5);
-    cell = world.getCell(1,1);
-    print cell.toString()
 
+    x=1
+    y=1
+    cell1 = world.getCell(x,y);
+    print cell1.toString()
+
+    #to right
+    cell2 = world.getCell(x+1,y);
+    print 'right: '+cell2.toString()
+
+    #to left
+    cell2 = world.getCell(x-1,y);
+    print 'left: '+cell2.toString()
+
+    # top of
+    cell2 = world.getCell(x,y+1);
+    print 'top: '+cell2.toString()
+
+    #botom of
+    cell2 = world.getCell(x,y-1);
+    print 'bottom: '+cell2.toString()
 
 main()

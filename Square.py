@@ -25,12 +25,13 @@ class Sqaure:
     def insertPercept(self,percept):
         if percept == PIT:
             for i in range(len(self.percepts)):
-                if self.percepts[i] == SAFE :
+                if self.percepts[i] == SAFE:
                     self.percepts = self.percepts[0:i]+self.percepts[i+1:len(self.percepts)]
-        else:
-            self.percepts.append(percept)
+                    break
 
-    def insertAdjacents(self, x, y, dim, world):
+        self.percepts.append(percept)
+
+    def insertAdjacents(self,percept, x, y, dim, world):
 
         #insert to right
         if x+1 < dim:
@@ -45,7 +46,7 @@ class Sqaure:
 
         #insert to top
         if y+1 < dim:
-            world.getCell(x,y-1).insertPercept(percept)
+            world.getCell(x,y+1).insertPercept(percept)
 
         #insert to bottom
         if y-1 >= 0:

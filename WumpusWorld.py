@@ -22,13 +22,17 @@ class WumpusWorld:
 
 
     def getRandCell(self):
-        return self.map[random.randint(0,self.dim-1)]
-        [random.randint(0,self.dim-1)]
+        return self.map[random.randint(0,self.dim-1)][random.randint(0,self.dim-1)]
 
     def placeGold(self):
-        # cell = self.getRandCell()
-        cell = self.getCell(1,1)
+        cell = self.getRandCell()
         cell.insertPercept(GOLD)
+        cell.insertAdjacents(GLITTER, cell.getX(),cell.getY(), self.dim, self)
+
+    def placePit(self):
+        cell = self.getCell(1,1)
+        cell.insertPercept(PIT)
+        cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
 
     def initWorld(self):
         #init all cells as safe
@@ -37,3 +41,5 @@ class WumpusWorld:
                 self.map[i][j]= Sqaure(i,j,[SAFE]);
         #insert gold pile
         self.placeGold()
+        #insert pit
+        self.placePit()
