@@ -23,7 +23,7 @@ class Sqaure:
         return self.percepts;
 
     def insertPercept(self,percept):
-        if percept == PIT:
+        if percept == PIT or percept == WUMPUS:
             for i in range(len(self.percepts)):
                 if self.percepts[i] == SAFE:
                     self.percepts = self.percepts[0:i]+self.percepts[i+1:len(self.percepts)]

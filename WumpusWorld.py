@@ -29,8 +29,13 @@ class WumpusWorld:
         cell.insertPercept(GOLD)
         cell.insertAdjacents(GLITTER, cell.getX(),cell.getY(), self.dim, self)
 
+    def placeWumpus(self):
+        cell = self.getRandCell()
+        cell.insertPercept(WUMPUS)
+        cell.insertAdjacents(STENCH, cell.getX(),cell.getY(), self.dim, self)
+
     def placePit(self):
-        cell = self.getCell(1,1)
+        cell = self.getRandCell()
         cell.insertPercept(PIT)
         cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
 
@@ -43,3 +48,5 @@ class WumpusWorld:
         self.placeGold()
         #insert pit
         self.placePit()
+        #inser wumpus
+        self.placeWumpus()
