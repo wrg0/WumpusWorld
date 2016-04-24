@@ -11,6 +11,8 @@ from WumpusWorld import *
 
 def main():
     world = WumpusWorld(5);
-    print world.getCell(1,1);
+    cell = world.getCell(4,4);
+    print cell.toString()
+
 
 main()
