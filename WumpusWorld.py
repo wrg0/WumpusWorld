@@ -32,7 +32,7 @@ class Application(tk.Frame):
         container = self.mapper[x][y]
         print ('(%i,%i)',x,y)
         if type == WUMPUS:
-            tk.Label(self,height=80,width=80,image=self.wumpus_img).grid(row=x,column=y)
+            tk.Label(self,height=75,width=75,image=self.wumpus_img).grid(row=x,column=y)
 
 
 class WumpusWorld:
