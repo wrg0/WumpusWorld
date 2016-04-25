@@ -26,17 +26,23 @@ class Application(tk.Frame):
     def createWidgets(self):
         for i in range(self.dim):
             for j in range(self.dim):
-                self.mapper[i][j] = tk.LabelFrame(self,height=80,width=80,bg='#000000').grid(row=i, column=j)
+                tk.LabelFrame(self,height=80,width=80,bg='#000000').grid(row=i, column=j)
         self.quitButton = tk.Button(self,text='Quit',command=self.quit).grid(row=self.dim+1,pady=10)
+    def insertWidget(self, x, y, type):
+        container = self.mapper[x][y]
+        print ('(%i,%i)',x,y)
+        if type == WUMPUS:
+            tk.Label(self,height=80,width=80,image=self.wumpus_img).grid(row=x,column=y)
 
 
 class WumpusWorld:
+
     def __init__(self,dim):
         self.dim = dim
-        self.map = [[0]*dim for i in range(dim)]
-        self.initWorld()
         self.app = Application(dim);
         self.app.master.title("Wumpus World")
+        self.map = [[0]*dim for i in range(dim)]
+        self.initWorld()
         self.app.mainloop()
 
     def size(self):
@@ -58,11 +64,15 @@ class WumpusWorld:
         cell = self.getRandCell()
         cell.insertPercept(WUMPUS)
         cell.insertAdjacents(STENCH, cell.getX(),cell.getY(), self.dim, self)
+        self.updateCellImage(cell.getX(), cell.getY(),WUMPUS)
 
     def placePit(self):
         cell = self.getRandCell()
         cell.insertPercept(PIT)
         cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
+
+    def updateCellImage(self,x,y,type):
+        self.app.insertWidget(x,y,type)
 
     def initWorld(self):
         #init all cells as safe
