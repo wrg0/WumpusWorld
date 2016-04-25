@@ -5,14 +5,39 @@
 #WumpusWorld Module/Class
 
 import random
+import Tkinter as tk
 from WumpusWorldVars import *
 from Square import *
+from PIL import Image, ImageTk
+
+class Application(tk.Frame):
+    def __init__(self, dim, master=None):
+        tk.Frame.__init__(self, master, height=600,width=760)
+        self.grid_propagate(0)
+        self.grid(padx=20,pady=20)
+        self.dim=dim
+        self.mapper = [[0]*dim for i in range(dim)]
+        # create wumpus image
+        wumpus_img=Image.open('./images/wumpus.gif')
+        wumpus_img.thumbnail(img_size, Image.ANTIALIAS)
+        self.wumpus_img = ImageTk.PhotoImage(wumpus_img)
+        self.createWidgets()
+
+    def createWidgets(self):
+        for i in range(self.dim):
+            for j in range(self.dim):
+                self.mapper[i][j] = tk.LabelFrame(self,height=80,width=80,bg='#000000').grid(row=i, column=j)
+        self.quitButton = tk.Button(self,text='Quit',command=self.quit).grid(row=self.dim+1,pady=10)
+
 
 class WumpusWorld:
     def __init__(self,dim):
         self.dim = dim
         self.map = [[0]*dim for i in range(dim)]
         self.initWorld()
+        self.app = Application(dim);
+        self.app.master.title("Wumpus World")
+        self.app.mainloop()
 
     def size(self):
         return self.dim*self.dim;

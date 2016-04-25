@@ -4,8 +4,8 @@ import Tkinter as tk
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
-        self.grid()
-        self.createWidgets()
+        self.grid().columnconfigure()
+        self.createWidgets(4,3)
 
     def sayHello(self):
         print 'hello wumpus world'
