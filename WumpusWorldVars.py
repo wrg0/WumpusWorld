@@ -5,4 +5,5 @@ GOLD = 'gold'
 GLITTER = 'glitter'
 SAFE = 'safe'
 STENCH = 'stench'
+HUNTER = 'hunter'
 img_size=[75,75]
