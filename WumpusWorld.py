@@ -25,22 +25,21 @@ class Application(tk.Frame):
         pit_img=Image.open('./images/pit.gif')
         pit_img.thumbnail(img_size, Image.ANTIALIAS)
         self.pit_img = ImageTk.PhotoImage(pit_img)
-        self.createWidgets()
         #create gold image
         gold_img=Image.open('./images/gold.gif')
         gold_img.thumbnail(img_size, Image.ANTIALIAS)
         self.gold_img = ImageTk.PhotoImage(gold_img)
-        self.createWidgets()
         #create gold image
-        hunter_img=Image.open('./images/hunter.png')
+        hunter_img=Image.open('./images/hunter.gif')
         hunter_img.thumbnail(img_size, Image.ANTIALIAS)
         self.hunter_img = ImageTk.PhotoImage(hunter_img)
+
         self.createWidgets()
 
     def createWidgets(self):
         for i in range(self.dim):
             for j in range(self.dim):
-                tk.LabelFrame(self,height=80,width=80,bg='#ffffff').grid(row=i, column=j)
+                tk.LabelFrame(self,height=90,width=90,bg='#ffffff').grid(row=i, column=j)
         self.startButton = tk.Button(self,text='Start',command='').grid(row=self.dim,column=0,pady=10)
         self.quitButton = tk.Button(self,text='Reset',command='').grid(row=self.dim,column=1,pady=10)
         self.startButton = tk.Button(self,text='Quit',command=self.quit).grid(row=self.dim,column=2,pady=10)
