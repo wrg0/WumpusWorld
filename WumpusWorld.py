@@ -12,27 +12,37 @@ from PIL import Image, ImageTk
 
 class Application(tk.Frame):
     def __init__(self, dim, master=None):
-        tk.Frame.__init__(self, master, height=600,width=760)
+        tk.Frame.__init__(self, master, height=500,width=600,bg='#cccccc',pady=10,padx=10)
         self.grid_propagate(0)
         self.grid(padx=20,pady=20)
         self.dim=dim
         self.mapper = [[0]*dim for i in range(dim)]
         # create wumpus image
-        wumpus_img=Image.open('./images/wumpus.gif')
+        wumpus_img=Image.open('./images/wumpus.png')
         wumpus_img.thumbnail(img_size, Image.ANTIALIAS)
         self.wumpus_img = ImageTk.PhotoImage(wumpus_img)
+        #create pit
+        pit_img=Image.open('./images/pit.png')
+        pit_img.thumbnail(img_size, Image.ANTIALIAS)
+        self.pit_img = ImageTk.PhotoImage(pit_img)
         self.createWidgets()
 
     def createWidgets(self):
         for i in range(self.dim):
             for j in range(self.dim):
-                tk.LabelFrame(self,height=80,width=80,bg='#000000').grid(row=i, column=j)
-        self.quitButton = tk.Button(self,text='Quit',command=self.quit).grid(row=self.dim+1,pady=10)
+                tk.LabelFrame(self,height=80,width=80,bg='#ffffff').grid(row=i, column=j)
+        self.startButton = tk.Button(self,text='Start',command='').grid(row=self.dim,column=0,pady=10)
+        self.quitButton = tk.Button(self,text='Reset',command='').grid(row=self.dim,column=1,pady=10)
+        self.startButton = tk.Button(self,text='Quit',command=self.quit).grid(row=self.dim,column=2,pady=10)
+
+
     def insertWidget(self, x, y, type):
         container = self.mapper[x][y]
         print ('(%i,%i)',x,y)
         if type == WUMPUS:
             tk.Label(self,height=75,width=75,image=self.wumpus_img).grid(row=x,column=y)
+        elif type == PIT:
+            tk.Label(self,height=75,width=75,image=self.pit_img).grid(row=x,column=y)
 
 
 class WumpusWorld:
@@ -53,7 +63,13 @@ class WumpusWorld:
 
 
     def getRandCell(self):
-        return self.map[random.randint(0,self.dim-1)][random.randint(0,self.dim-1)]
+        x=0
+        y=0
+        while x == 0 and y == 0:
+            x = random.randint(0,self.dim-1)
+            y = random.randint(0,self.dim-1)
+
+        return self.map[x][y]
 
     def placeGold(self):
         cell = self.getRandCell()
@@ -70,6 +86,11 @@ class WumpusWorld:
         cell = self.getRandCell()
         cell.insertPercept(PIT)
         cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
+        self.updateCellImage(cell.getX(), cell.getY(),PIT)
+        cell = self.getRandCell()
+        cell.insertPercept(PIT)
+        cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
+        self.updateCellImage(cell.getX(), cell.getY(),PIT)
 
     def updateCellImage(self,x,y,type):
         self.app.insertWidget(x,y,type)
