@@ -15,32 +15,35 @@ class WumpusWorld:
 
     def __init__(self,dim):
         self.dim = dim
-        self.app = tk.Tk()
+        app = tk.Tk()
+
+        #insert Buttons
+        self.startButton = tk.Button(app,text='run',command='')
+        self.startButton.grid_propagate(0)
+        self.startButton.grid(pady=10, padx=5, row=0, column=0)
+
+        self.stepButton = tk.Button(app,text='step',command=self.step)
+        self.stepButton.grid_propagate(0)
+        self.stepButton.grid(pady=10, padx=5, row=0, column=1)
+
+        self.resetButton = tk.Button(app,text='reset',command=self.resetWorld)
+        self.resetButton.grid_propagate(0)
+        self.resetButton.grid(pady=10, padx=5, row=0, column=2)
+
+        self.quitButton = tk.Button(app,text='quit',command=app.quit)
+        self.quitButton.grid_propagate(0)
+        self.quitButton.grid(pady=10, padx=5, row=0, column=4)
+
+        self.app= app;
         self.initContainer()
 
     def initContainer(self):
         #insert container frame
         app = self.app
-
-        self.container=tk.Frame(app,width=600,height=460,bg='#ffffff')
+        self.container=tk.Frame(app,width=450,height=460,bg='#ffffff')
         self.container.grid_propagate(0)
         self.container.grid(row=1,columnspan=5,pady=5,padx=5)
-        #insert Buttons
-        self.startButton = tk.Button(app,text='run',command='')
-        self.startButton.grid_propagate(0)
-        self.startButton.grid(pady=10, padx=10, row=0, column=0)
 
-        self.stepButton = tk.Button(app,text='step',command='')
-        self.stepButton.grid_propagate(0)
-        self.stepButton.grid(pady=10, padx=10, row=0, column=1)
-
-        self.resetButton = tk.Button(app,text='reset',command='')
-        self.resetButton.grid_propagate(0)
-        self.resetButton.grid(pady=10, padx=10, row=0, column=2)
-
-        self.quitButton = tk.Button(app,text='quit',command=app.quit)
-        self.quitButton.grid_propagate(0)
-        self.quitButton.grid(pady=10, padx=10, row=0, column=3,columnspan=2)
 
         #create images
         self.createImages()
@@ -49,7 +52,8 @@ class WumpusWorld:
         self.app.mainloop()
 
     def resetWorld(self):
-        initContainer()
+        self.container.grid_remove()
+        self.initContainer()
     def size(self):
         return self.dim*self.dim;
 
@@ -67,6 +71,7 @@ class WumpusWorld:
         return self.map[x][y]
 
     def placeHunter(self,x,y):
+        self.hunterLoc = [x,y]
         self.updateCellImage(x,y,HUNTER)
 
     def placeGold(self):
@@ -116,16 +121,20 @@ class WumpusWorld:
 
 
     def insertWidget(self, x, y, type):
-        container = self.mapper[x][y]
+
         print ('(%i,%i)',x,y)
         if type == HUNTER:
-            tk.Label(self.container,height=75,width=75,image=self.hunter_img).grid(row=x,column=y)
+            self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.hunter_img)
+            self.mapper[x][y].grid(row=x,column=y)
         elif type == WUMPUS:
-            tk.Label(self.container,height=75,width=75,image=self.wumpus_img).grid(row=x,column=y)
+            self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.wumpus_img)
+            self.mapper[x][y].grid(row=x,column=y)
         elif type == PIT:
-            tk.Label(self.container,height=75,width=75,image=self.pit_img).grid(row=x,column=y)
+            self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.pit_img)
+            self.mapper[x][y].grid(row=x,column=y)
         elif type == GOLD:
-            tk.Label(self.container,height=75,width=75,image=self.gold_img).grid(row=x,column=y)
+            self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.gold_img)
+            self.mapper[x][y].grid(row=x,column=y)
 
     def initWorld(self):
         dim = self.dim
@@ -144,3 +153,10 @@ class WumpusWorld:
         self.placeWumpus()
         #insert hunter
         self.placeHunter(0,0)
+
+    def step(self):
+        x=self.hunterLoc[0]
+        y=self.hunterLoc[1]
+        self.mapper[x][y].grid_remove()
+        self.mapper[x][y]=None
+        self.placeHunter(x,y+1)
