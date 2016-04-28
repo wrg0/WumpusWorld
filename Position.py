@@ -7,10 +7,11 @@ from WumpusWorldVars import *
 from WumpusWorld import *
 
 
-class Sqaure:
+class Position:
     def __init__( self, x, y, p):
         self.x = x
         self.y = y
+        self.visited = False;
         self.percepts = p
 
     def getX(self):
@@ -18,6 +19,9 @@ class Sqaure:
 
     def getY(self):
         return self.y
+
+    def setVisited(self, predicate):
+        self.visited = predicate
 
     def getPercepts(self):
         return self.percepts;
@@ -34,20 +38,20 @@ class Sqaure:
     def insertAdjacents(self,percept, x, y, dim, world):
         #insert to right
         if x+1 < dim:
-            cell = world.getCell(x+1,y)
-            cell.insertPercept(percept)
+            position = world.getposition(x+1,y)
+            position.insertPercept(percept)
         #insert to left
         if x-1 > -1:
-            cell = world.getCell(x-1,y)
-            cell.insertPercept(percept)
+            position = world.getposition(x-1,y)
+            position.insertPercept(percept)
         #insert to top
         if y+1 < dim:
-            cell = world.getCell(x,y+1)
-            cell.insertPercept(percept)
+            position = world.getposition(x,y+1)
+            position.insertPercept(percept)
         #insert to bottom
         if y-1 > -1:
-            cell = world.getCell(x,y-1)
-            cell.insertPercept(percept)
+            position = world.getposition(x,y-1)
+            position.insertPercept(percept)
 
     def toString(self):
-        return 'cell:'+'('+str(self.getX())+', '+str(self.getY())+') :'+str(self.getPercepts())
+        return 'position:'+'('+str(self.getX())+', '+str(self.getY())+') :'+str(self.getPercepts())

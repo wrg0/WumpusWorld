@@ -8,6 +8,8 @@ class Player():
         self.direction = self.directions[random.randint(0,1)]
         self.arrows = 1
         self.steps = []
+        #if visited and no gold mark safe
+        #heck if visited 
 
     def turn(self, LR ):
         if LR == 'L':

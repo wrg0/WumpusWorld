@@ -7,7 +7,7 @@
 import random
 import Tkinter as tk
 from WumpusWorldVars import *
-from Square import *
+from Position import *
 from PIL import Image, ImageTk
 from Player import *
 
@@ -57,11 +57,11 @@ class WumpusWorld:
     def size(self):
         return self.dim*self.dim;
 
-    def getCell(self,x,y):
+    def getposition(self,x,y):
         return self.map[x][y]
 
 
-    def getRandCell(self):
+    def getRandposition(self):
         x=0
         y=0
         while (x == 0 and y == 0):
@@ -70,29 +70,31 @@ class WumpusWorld:
         return self.map[x][y]
 
     def placeHunter(self,x,y):
+        percepts = self.getposition(x,y)
+        print 'percepts: '+percepts.toString()
         self.hunterLoc = [x,y]
-        self.updateCellImage(x,y,HUNTER)
+        self.updatepositionImage(x,y,HUNTER)
 
     def placeGold(self):
-        cell = self.getRandCell()
-        cell.insertPercept(GOLD)
-        cell.insertAdjacents(GLITTER, cell.getX(),cell.getY(), self.dim, self)
-        self.updateCellImage(cell.getX(), cell.getY(),GOLD)
+        position = self.getRandposition()
+        position.insertPercept(GOLD)
+        position.insertAdjacents(GLITTER, position.getX(),position.getY(), self.dim, self)
+        self.updatepositionImage(position.getX(), position.getY(),GOLD)
 
     def placeWumpus(self):
-        cell = self.getRandCell()
-        cell.insertPercept(WUMPUS)
-        cell.insertAdjacents(STENCH, cell.getX(),cell.getY(), self.dim, self)
-        self.updateCellImage(cell.getX(), cell.getY(),WUMPUS)
+        position = self.getRandposition()
+        position.insertPercept(WUMPUS)
+        position.insertAdjacents(STENCH, position.getX(),position.getY(), self.dim, self)
+        self.updatepositionImage(position.getX(), position.getY(),WUMPUS)
 
     def placePit(self):
         for i in range(self.dim-2):
-            cell = self.getRandCell()
-            cell.insertPercept(PIT)
-            cell.insertAdjacents(BREEZE, cell.getX(),cell.getY(), self.dim, self)
-            self.updateCellImage(cell.getX(), cell.getY(),PIT)
+            position = self.getRandposition()
+            position.insertPercept(PIT)
+            position.insertAdjacents(BREEZE, position.getX(),position.getY(), self.dim, self)
+            self.updatepositionImage(position.getX(), position.getY(),PIT)
 
-    def updateCellImage(self,x,y,type):
+    def updatepositionImage(self,x,y,type):
         self.insertWidget(x,y,type)
 
     def createWidgets(self,container):
@@ -140,10 +142,10 @@ class WumpusWorld:
         self.map = [[0]*dim for i in range(dim)]
         self.mapper = [[0]*dim for i in range(dim)]
 
-        #init all cells as safe
+        #init all positions as safe
         for i in range(self.dim):
             for j in range(self.dim):
-                self.map[i][j]= Sqaure(i,j,[]);
+                self.map[i][j]= Position(i,j,[]);
         #insert gold pile
         self.placeGold()
         #insert pit
@@ -159,8 +161,7 @@ class WumpusWorld:
     def step(self):
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
-        percepts = self.getCell(x,y)
-        print percepts.toString()
+        percepts = self.getposition(x,y)
         self.mapper[x][y].grid_remove()
         self.mapper[x][y]=None
         move = self.player.nextMove(x,y,self.dim)
