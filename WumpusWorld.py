@@ -34,8 +34,10 @@ class WumpusWorld:
         self.quitButton.grid_propagate(0)
         self.quitButton.grid(pady=10, padx=5, row=0, column=4)
 
+        self.player = Player()
         self.app= app;
         self.initContainer()
+
 
     def initContainer(self):
         #insert container frame
@@ -57,11 +59,11 @@ class WumpusWorld:
     def size(self):
         return self.dim*self.dim;
 
-    def getposition(self,x,y):
+    def getPosition(self,x,y):
         return self.map[x][y]
 
 
-    def getRandposition(self):
+    def getRandPosition(self):
         x=0
         y=0
         while (x == 0 and y == 0):
@@ -70,26 +72,28 @@ class WumpusWorld:
         return self.map[x][y]
 
     def placeHunter(self,x,y):
-        percepts = self.getposition(x,y)
+        percepts = self.getPosition(x,y)
         print 'percepts: '+percepts.toString()
         self.hunterLoc = [x,y]
         self.updatepositionImage(x,y,HUNTER)
+        self.player.appendVisited(x,y)
+
 
     def placeGold(self):
-        position = self.getRandposition()
+        position = self.getRandPosition()
         position.insertPercept(GOLD)
         position.insertAdjacents(GLITTER, position.getX(),position.getY(), self.dim, self)
         self.updatepositionImage(position.getX(), position.getY(),GOLD)
 
     def placeWumpus(self):
-        position = self.getRandposition()
+        position = self.getRandPosition()
         position.insertPercept(WUMPUS)
         position.insertAdjacents(STENCH, position.getX(),position.getY(), self.dim, self)
         self.updatepositionImage(position.getX(), position.getY(),WUMPUS)
 
     def placePit(self):
         for i in range(self.dim-2):
-            position = self.getRandposition()
+            position = self.getRandPosition()
             position.insertPercept(PIT)
             position.insertAdjacents(BREEZE, position.getX(),position.getY(), self.dim, self)
             self.updatepositionImage(position.getX(), position.getY(),PIT)
@@ -138,6 +142,7 @@ class WumpusWorld:
             self.mapper[x][y].grid(row=x,column=y)
 
     def initWorld(self):
+        self.player = Player()
         dim = self.dim
         self.map = [[0]*dim for i in range(dim)]
         self.mapper = [[0]*dim for i in range(dim)]
@@ -155,13 +160,12 @@ class WumpusWorld:
         #insert hunter
         self.placeHunter(0,0)
         #init player
-        self.player = Player()
 
 
     def step(self):
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
-        percepts = self.getposition(x,y)
+        percepts = self.getPosition(x,y)
         self.mapper[x][y].grid_remove()
         self.mapper[x][y]=None
         move = self.player.nextMove(x,y,self.dim)

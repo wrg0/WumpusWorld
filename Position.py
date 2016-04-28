@@ -38,19 +38,19 @@ class Position:
     def insertAdjacents(self,percept, x, y, dim, world):
         #insert to right
         if x+1 < dim:
-            position = world.getposition(x+1,y)
+            position = world.getPosition(x+1,y)
             position.insertPercept(percept)
         #insert to left
         if x-1 > -1:
-            position = world.getposition(x-1,y)
+            position = world.getPosition(x-1,y)
             position.insertPercept(percept)
         #insert to top
         if y+1 < dim:
-            position = world.getposition(x,y+1)
+            position = world.getPosition(x,y+1)
             position.insertPercept(percept)
         #insert to bottom
         if y-1 > -1:
-            position = world.getposition(x,y-1)
+            position = world.getPosition(x,y-1)
             position.insertPercept(percept)
 
     def toString(self):
