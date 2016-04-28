@@ -10,6 +10,7 @@ from WumpusWorldVars import *
 from Square import *
 from PIL import Image, ImageTk
 from Player import *
+from Sentence import *
 
 
 class WumpusWorld:
@@ -137,6 +138,7 @@ class WumpusWorld:
 
     def initWorld(self):
         dim = self.dim
+        self.kb = [[Sentence()]*dim for i in range(dim)]
         self.map = [[0]*dim for i in range(dim)]
         self.mapper = [[0]*dim for i in range(dim)]
 
@@ -155,11 +157,30 @@ class WumpusWorld:
         #init player
         self.player = Player()
 
+    def evalPercepts(self,x,y,percepts):
+        sentence = self.kb[x][y]
+        for i in range (len(percepts)):
+            percept=percepts[i]
+
+            if percept == WUMPUS:
+                sentence.wumpus=True
+            elif percept == STENCH:
+                sentence.stench = True
+            elif percept == PIT:
+                sentence.pit = True
+            elif percept == BREEZE:
+                sentence.breeze = True
+            elif percept == GLITTER:
+                sentence.glitter = True
+            elif percept == GOLD:
+                sentence.gold = True
+            print 'kb:({x},{y}) {A}'.format(x,y,self.kb[x][y])
 
     def step(self):
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
         percepts = self.getCell(x,y)
+        self.evalPercepts(x,y,percepts)
         print percepts.toString()
         self.mapper[x][y].grid_remove()
         self.mapper[x][y]=None
