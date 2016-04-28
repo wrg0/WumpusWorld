@@ -7,7 +7,9 @@ class Player():
         self.compass = self.NSEW[random.randint(0,3)]
         self.direction = self.directions[random.randint(0,1)]
         self.arrows = 1
-        self.steps = []
+        self.visited = []
+        #if visited and no gold mark safe
+        #heck if visited
 
     def turn(self, LR ):
         if LR == 'L':
@@ -20,6 +22,13 @@ class Player():
 
     def getDirection(self):
         return self.direction
+
+    def appendVisited(self,x,y):
+        self.visited.append([x,y])
+        print 'visited: {} '.format(self.visited)
+
+    def popVisited(self):
+        return self.visited.pop()
 
     def shoot(self):
         if self.arrows > 0:
