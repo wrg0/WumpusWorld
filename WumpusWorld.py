@@ -9,6 +9,7 @@ import Tkinter as tk
 from WumpusWorldVars import *
 from Square import *
 from PIL import Image, ImageTk
+from Player import *
 
 
 class WumpusWorld:
@@ -16,7 +17,6 @@ class WumpusWorld:
     def __init__(self,dim):
         self.dim = dim
         app = tk.Tk()
-
         #insert Buttons
         self.startButton = tk.Button(app,text='run',command='')
         self.startButton.grid_propagate(0)
@@ -44,7 +44,6 @@ class WumpusWorld:
         self.container.grid_propagate(0)
         self.container.grid(row=1,columnspan=5,pady=5,padx=5)
 
-
         #create images
         self.createImages()
         self.createWidgets(self.container)
@@ -54,6 +53,7 @@ class WumpusWorld:
     def resetWorld(self):
         self.container.grid_remove()
         self.initContainer()
+
     def size(self):
         return self.dim*self.dim;
 
@@ -67,7 +67,6 @@ class WumpusWorld:
         while (x == 0 and y == 0):
             x = random.randint(0,self.dim-1)
             y = random.randint(0,self.dim-1)
-        print ('(%i,%i)',x,y)
         return self.map[x][y]
 
     def placeHunter(self,x,y):
@@ -122,7 +121,7 @@ class WumpusWorld:
 
     def insertWidget(self, x, y, type):
 
-        print ('(%i,%i)',x,y)
+        print 'inserting: {} : ({},{})'.format(type,x,y)
         if type == HUNTER:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.hunter_img)
             self.mapper[x][y].grid(row=x,column=y)
@@ -144,7 +143,7 @@ class WumpusWorld:
         #init all cells as safe
         for i in range(self.dim):
             for j in range(self.dim):
-                self.map[i][j]= Sqaure(i,j,[SAFE]);
+                self.map[i][j]= Sqaure(i,j,[]);
         #insert gold pile
         self.placeGold()
         #insert pit
@@ -153,10 +152,16 @@ class WumpusWorld:
         self.placeWumpus()
         #insert hunter
         self.placeHunter(0,0)
+        #init player
+        self.player = Player()
+
 
     def step(self):
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
+        percepts = self.getCell(x,y)
+        print percepts.toString()
         self.mapper[x][y].grid_remove()
         self.mapper[x][y]=None
-        self.placeHunter(x,y+1)
+        move = self.player.nextMove(x,y,self.dim)
+        self.placeHunter(move[0],move[1])

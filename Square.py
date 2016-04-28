@@ -26,34 +26,28 @@ class Sqaure:
         if percept == PIT or percept == WUMPUS:
             for i in range(len(self.percepts)):
                 if self.percepts[i] == SAFE:
-                    self.percepts = self.percepts[0:i]+self.percepts[i+1:len(self.percepts)]
+                    self.percepts = self.percepts[0:i]+self.percepts[i:len(self.percepts)]
                     break
 
         self.percepts.append(percept)
 
     def insertAdjacents(self,percept, x, y, dim, world):
-
         #insert to right
         if x+1 < dim:
-            world.getCell(x+1,y).insertPercept(percept)
-
+            cell = world.getCell(x+1,y)
+            cell.insertPercept(percept)
         #insert to left
-        if x-1 >= 0:
-            if percept != PIT:
-                world.getCell(x-1,y).insertPercept(percept)
-            elif x-1 !=0:
-                world.getCell(x-1,y).insertPercept(percept)
-
+        if x-1 > -1:
+            cell = world.getCell(x-1,y)
+            cell.insertPercept(percept)
         #insert to top
         if y+1 < dim:
-            world.getCell(x,y+1).insertPercept(percept)
-
+            cell = world.getCell(x,y+1)
+            cell.insertPercept(percept)
         #insert to bottom
-        if y-1 >= 0:
-            if percept != PIT:
-                world.getCell(x,y-1).insertPercept(percept)
-            elif y-1 != 0:
-                world.getCell(x,y-1).insertPercept(percept)
+        if y-1 > -1:
+            cell = world.getCell(x,y-1)
+            cell.insertPercept(percept)
 
     def toString(self):
         return 'cell:'+'('+str(self.getX())+', '+str(self.getY())+') :'+str(self.getPercepts())
