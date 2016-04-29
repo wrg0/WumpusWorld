@@ -226,6 +226,13 @@ class KnowledgeBase():
                 nRight = None
 
         #check for pit
-
+        # [][][~]
+        # [][C][?]
+        # [][][~]
+        if nLeft != None and nRight != None:
+            if nLeft.visited and nRight.visited\
+            and (not nLeft.stench) and (not nRight.stench)\
+            and (not nLeft.breeze) and (not nRight.breeze):
+                return True
 
         return False

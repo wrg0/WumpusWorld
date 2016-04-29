@@ -6,6 +6,7 @@ class Sentence():
         self.breeze = None
         self.gold= None
         self.glitter = None
+        self.visited = False
 
     def toString(self):
         return 'wumpus:{}, stench:{}, pit:{}, breeze:{}, gold:{}, glitter:{}'\
