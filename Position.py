@@ -11,6 +11,7 @@ class Position:
     def __init__( self, x, y, p):
         self.x = x
         self.y = y
+        self.visited=False
         self.percepts = []
 
     def getX(self):
@@ -24,6 +25,9 @@ class Position:
 
     def insertPercept(self,percept):
         self.percepts.append(percept)
+
+    def setAsVisited(self):
+        self.visited=True
 
     def insertAdjacents(self,percept, x, y, dim, world):
         #insert to right

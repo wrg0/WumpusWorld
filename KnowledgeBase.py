@@ -55,20 +55,27 @@ class KnowledgeBase():
         nLeft = None
         nRight = None
 
-        front = None
-        back = None
+        bottom = None
+        bLeft = None
+        bRight = None
 
         if compass == 'N':
-
-            #front
-            if nY+1 > self.dim:
-                front = self.models[nX][nY+1]
 
             #bottom
             if cY-1 > 0:
                 bottom = self.models[cX][cY-1]
             else:
                 bottom = None
+
+            #bottom left
+            if cY-1 > 0 and cX-1  > 0:
+                bLeft = self.models[cX-1][cY-1]
+            else:
+                bLeft = None
+
+            #bottom right
+            if cY-1 > 0 and cX+1 < self.dim:
+                bRight = self.models[cX+1][cY-1]
 
             #left
             if cX-1 > 0:
@@ -105,6 +112,16 @@ class KnowledgeBase():
             else:
                 bottom = None
 
+            #bottom left
+            if cY-1 > 0 and cX-1 > 0:
+                bLeft = self.models[cX-1][cY-1]
+            else:
+                bLeft = None
+
+            #bottom right
+            if cY+1 < self.dim and cX-1 > 0:
+                bRight = self.models[cX-1][cY+1]
+
             #left
             if cX+1 < self.dim:
                 cLeft = self.models[cX+1][cY]
@@ -140,6 +157,8 @@ class KnowledgeBase():
             else:
                 bottom = None
 
+
+
             #left
             if cY-1 > 0:
                 cLeft = self.models[cX][cY-1]
@@ -174,6 +193,16 @@ class KnowledgeBase():
             else:
                 bottom = None
 
+            #bottom left
+            if cY+1 < self.dim and cX+1 < self.dim:
+                bLeft = self.models[cX+1][cY+1]
+            else:
+                bLeft = None
+
+            #bottom right
+            if cY-1 > 0 and cX+1 < self.dim:
+                bRight = self.models[cX+1][cY-1]
+
             #left
             if cY+1 < self.dim:
                 cLeft = self.models[cX][cY+1]
@@ -195,3 +224,8 @@ class KnowledgeBase():
                 nRight = self.models[nX][nY-1]
             else:
                 nRight = None
+
+        #check for pit
+
+
+        return False
