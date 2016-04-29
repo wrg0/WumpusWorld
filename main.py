@@ -16,10 +16,7 @@ from WumpusWorld import *
 
 def main():
     world = WumpusWorld(5);
-
-    x=0
-    y=0
-    cell1 = world.getCell(x,y);
+    
     # print cell1.toString()
     #
     # #to right

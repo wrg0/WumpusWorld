@@ -1,6 +1,6 @@
 import random
 
-class Player():
+class Agent():
     def __init__(self):
         self.NSEW = ['W','N','E','S']
         self.directions = ['L','R']

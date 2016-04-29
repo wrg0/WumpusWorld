@@ -6,3 +6,8 @@ class Sentence():
         self.breeze = None
         self.gold= None
         self.glitter = None
+
+    def toString(self):
+        return 'wumpus:{}, stench:{}, pit:{}, breeze:{}, gold:{}, glitter:{}'\
+        .format(self.wumpus,self.stench,self.pit\
+        ,self.breeze,self.gold,self.glitter)

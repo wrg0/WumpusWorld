@@ -9,7 +9,8 @@ import Tkinter as tk
 from WumpusWorldVars import *
 from Position import *
 from PIL import Image, ImageTk
-from Player import *
+from Agent import *
+from KnowledgeBase import *
 from Sentence import *
 
 
@@ -35,7 +36,7 @@ class WumpusWorld:
         self.quitButton.grid_propagate(0)
         self.quitButton.grid(pady=10, padx=5, row=0, column=4)
 
-        self.player = Player()
+        self.agent = Agent()
         self.app= app;
         self.initContainer()
 
@@ -73,11 +74,11 @@ class WumpusWorld:
         return self.map[x][y]
 
     def placeHunter(self,x,y):
-        percepts = self.getPosition(x,y)
-        print 'percepts: '+percepts.toString()
+        position = self.getPosition(x,y)
         self.hunterLoc = [x,y]
         self.updatepositionImage(x,y,HUNTER)
-        self.player.appendVisited(x,y)
+        self.kb.tell(x,y,position.percepts)
+
 
 
     def placeGold(self):
@@ -143,9 +144,10 @@ class WumpusWorld:
             self.mapper[x][y].grid(row=x,column=y)
 
     def initWorld(self):
-        self.player = Player()
+        self.agent = Agent()
         dim = self.dim
-        self.kb = [[Sentence()]*dim for i in range(dim)]
+        self.kb = KnowledgeBase(self.dim)
+
         self.map = [[0]*dim for i in range(dim)]
         self.mapper = [[0]*dim for i in range(dim)]
 
@@ -161,35 +163,13 @@ class WumpusWorld:
         self.placeWumpus()
         #insert hunter
         self.placeHunter(0,0)
-        #init player
 
-    def evalPercepts(self,x,y,percepts):
-        sentence = self.kb[x][y]
-        for i in range (len(percepts)):
-            percept=percepts[i]
-
-            if percept == WUMPUS:
-                sentence.wumpus=True
-            elif percept == STENCH:
-                sentence.stench = True
-            elif percept == PIT:
-                sentence.pit = True
-            elif percept == BREEZE:
-                sentence.breeze = True
-            elif percept == GLITTER:
-                sentence.glitter = True
-            elif percept == GOLD:
-                sentence.gold = True
-            print 'kb:({x},{y}) {A}'.format(x,y,self.kb[x][y])
 
     def step(self):
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
-        percepts = self.getCell(x,y)
-        self.evalPercepts(x,y,percepts)
-        print percepts.toString()
-
+        position = self.getPosition(x,y)
         self.mapper[x][y].grid_remove()
         self.mapper[x][y]=None
-        move = self.player.nextMove(x,y,self.dim)
+        move = self.agent.nextMove(x,y,self.dim)
         self.placeHunter(move[0],move[1])

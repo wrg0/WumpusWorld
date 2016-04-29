@@ -11,8 +11,7 @@ class Position:
     def __init__( self, x, y, p):
         self.x = x
         self.y = y
-        self.visited = False;
-        self.percepts = p
+        self.percepts = []
 
     def getX(self):
         return self.x
@@ -20,19 +19,10 @@ class Position:
     def getY(self):
         return self.y
 
-    def setVisited(self, predicate):
-        self.visited = predicate
-
     def getPercepts(self):
         return self.percepts;
 
     def insertPercept(self,percept):
-        if percept == PIT or percept == WUMPUS:
-            for i in range(len(self.percepts)):
-                if self.percepts[i] == SAFE:
-                    self.percepts = self.percepts[0:i]+self.percepts[i:len(self.percepts)]
-                    break
-
         self.percepts.append(percept)
 
     def insertAdjacents(self,percept, x, y, dim, world):
