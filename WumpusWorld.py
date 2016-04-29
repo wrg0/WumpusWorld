@@ -74,9 +74,11 @@ class WumpusWorld:
         return self.map[x][y]
 
     def placeHunter(self,x,y):
-        position = self.getPosition(x,y)
         self.hunterLoc = [x,y]
+        self.agent.visited.append([x,y])
         self.updatepositionImage(x,y,HUNTER)
+
+        position = self.getPosition(x,y)
         self.kb.tell(x,y,position.percepts)
 
 
@@ -169,7 +171,15 @@ class WumpusWorld:
         x=self.hunterLoc[0]
         y=self.hunterLoc[1]
         position = self.getPosition(x,y)
-        self.mapper[x][y].grid_remove()
-        self.mapper[x][y]=None
         move = self.agent.nextMove(x,y,self.dim)
-        self.placeHunter(move[0],move[1])
+
+        if self.kb.ask([x,y],move,self.agent.compass):
+            self.mapper[x][y].grid_remove()
+            self.mapper[x][y]=None
+            self.placeHunter(move[0],move[1])
+        else:
+            self.mapper[x][y].grid_remove()
+            self.mapper[x][y]=None
+            back = self.agent.visited.pop()
+            self.placeHunter(back[0],back[1])
+            self.agent.visited.pop()
