@@ -175,12 +175,15 @@ class WumpusWorld:
         move = self.agent.nextMove(x,y,self.dim)
 
         if self.getPosition(move[0],move[1]).visited == True:
-            if self.turnCount < 4:
+            if self.turnCount < 5:
                 self.agent.turn('R')
                 self.turnCount+=1
                 self.step()
+            else:
+                self.turnCount = 0
 
         if self.kb.ask([x,y],move,self.agent.compass):
+            print 'removing x:{},y:{}'.format(x,y)
             self.mapper[x][y].grid_remove()
             self.mapper[x][y]=None
             self.placeHunter(move[0],move[1])
@@ -193,6 +196,6 @@ class WumpusWorld:
             self.mapper[x][y].grid_remove()
             self.mapper[x][y]=None
             print self.agent.visited
+            self.agent.visited.pop()
             back = self.agent.visited.pop()
             self.placeHunter(back[0],back[1])
-            self.agent.visited.pop()
