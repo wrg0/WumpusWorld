@@ -46,193 +46,104 @@ class KnowledgeBase():
         # check if nModel is not safe or unknown if safe
         if not cModel.breeze and not cModel.stench:
             return True
-        else:
-            print 'unknown, performing model enumeration...'
 
-        cLeft=None
-        cRight = None
 
         nLeft = None
         nRight = None
 
-        bottom = None
-        bLeft = None
-        bRight = None
-
         if compass == 'N':
 
-            #bottom
-            if cY-1 > 0:
-                bottom = self.models[cX][cY-1]
+            #next left & right
+            if nX+1 < self.dim:
+                nRight = self.models[nX+1][nY]
             else:
-                bottom = None
-
-            #bottom left
-            if cY-1 > 0 and cX-1  > 0:
-                bLeft = self.models[cX-1][cY-1]
-            else:
-                bLeft = None
-
-            #bottom right
-            if cY-1 > 0 and cX+1 < self.dim:
-                bRight = self.models[cX+1][cY-1]
-
-            #left
-            if cX-1 > 0:
-                cLeft = self.models[cX-1][cY]
-            else:
-                cLeft = None
+                nRight = None
 
             if nX-1 > 0:
                 nLeft = self.models[nX-1][nY]
             else:
                 nLeft = None
 
-            #right
-            if cX+1 < self.dim:
-                cRight = self.models[cX+1][nY]
-            else:
-                cRight = None
-
-            if nX+1 < self.dim:
-                nRight = self.models[nX+1][nY]
-            else:
-                nRight = None
-
 
         if compass == 'S':
 
-            #front
-            if nY-1 > 0:
-                front = self.models[nX][nY-1]
-
-            #bottom
-            if cY+1 < self.dim:
-                bottom = self.models[cX][cY+1]
+            #next right & left
+            if nX-1 > 0:
+                nRight = self.models[nX-1][nY]
             else:
-                bottom = None
-
-            #bottom left
-            if cY-1 > 0 and cX-1 > 0:
-                bLeft = self.models[cX-1][cY-1]
-            else:
-                bLeft = None
-
-            #bottom right
-            if cY+1 < self.dim and cX-1 > 0:
-                bRight = self.models[cX-1][cY+1]
-
-            #left
-            if cX+1 < self.dim:
-                cLeft = self.models[cX+1][cY]
-            else:
-                cLeft = None
+                nRight = None
 
             if nX+1 < self.dim:
                 nLeft = self.models[nX+1][nY]
             else:
                 nLeft = None
 
-            #right
-            if cX-1 > 0:
-                cRight = self.models[cX-1][cY]
-            else:
-                cRight = None
-
-            if nX-1 > 0:
-                nRight = self.models[nX-1][nY]
-            else:
-                nRight = None
-
 
         if compass == 'E':
 
-            #front
-            if nX+1 < self.dim:
-                front = self.models[nX+1][nY]
-
-            #bottom
-            if cX-1 > 0:
-                bottom = self.models[cX-1][cY]
+            if nY-1 > 0:
+                nRight = self.models[nX][nY-1]
             else:
-                bottom = None
+                cRight = None
+
+            if nY+1 < self.dim:
+                nLeft = self.models[nX][nY+1]
+            else:
+                nLeft = None
 
 
+        if compass == 'W':
 
-            #left
+            if nY+1 < self.dim:
+                nRight = self.models[nX][nY+1]
+            else:
+                nRight = None
+
             if cY-1 > 0:
                 cLeft = self.models[cX][cY-1]
             else:
                 cLeft = None
 
-            if nY-1 > 0:
-                nRight = self.models[nX][nY-1]
-            else:
-                cRight = None
 
-            #right
-            if cY+1 < self.dim:
-                cRight = self.models[cX][cY+1]
-            else:
-                cRight = None
-
-            if nY+1 < self.dim:
-                nRight = self.models[nX][nY+1]
-            else:
-                nRight = None
-
-        if compass == 'W':
-
-            #front
-            if nX - 1 > 0:
-                front = self.models[nX-1][nY]
-
-            #bottom
-            if cX+1 < self.dim:
-                bottom = self.models[cX+1][cY]
-            else:
-                bottom = None
-
-            #bottom left
-            if cY+1 < self.dim and cX+1 < self.dim:
-                bLeft = self.models[cX+1][cY+1]
-            else:
-                bLeft = None
-
-            #bottom right
-            if cY-1 > 0 and cX+1 < self.dim:
-                bRight = self.models[cX+1][cY-1]
-
-            #left
-            if cY+1 < self.dim:
-                cLeft = self.models[cX][cY+1]
-            else:
-                cLeft = None
-
-            if nY+1 < self.dim:
-                nRight = self.models[nX][nY+1]
-            else:
-                cRight = None
-
-            #right
-            if cY-1 > 0:
-                cRight = self.models[cX][cY-1]
-            else:
-                cRight = None
-
-            if nY-1 > 0:
-                nRight = self.models[nX][nY-1]
-            else:
-                nRight = None
-
-        #check for pit
-        # [][][~]
-        # [][C][?]
-        # [][][~]
+        #check for pit and wumpus
         if nLeft != None and nRight != None:
             if nLeft.visited and nRight.visited\
             and (not nLeft.stench) and (not nRight.stench)\
             and (not nLeft.breeze) and (not nRight.breeze):
                 return True
+            elif nLeft.visited and nRight.visited\
+            and nLeft.breeze and nRight.breeze:
+                nModel.visited = True
+                nModel.pit = True
+            elif nLeft.visited and nRight.visited\
+            and nLeft.stench and nRight.stench:
+                nModel.visited = True
+                nModel.wumpus = True
+
+        elif nLeft != None and nRight == None:
+            if nLeft.visited\
+            and (not nLeft.stench) and (not nLeft.breeze):
+                return True
+            elif nLeft.visited and nLeft.breeze:
+                nModel.visited = True
+                nModel.pit = True
+                return False
+            elif nLeft.visited and nLeft.stench:
+                nModel.visited = True
+                nModel.wumpus = True
+                return False
+        elif nRight != None and nLeft == None:
+            if nRight.visited\
+            and (not nRight.stench) and (not nRight.breeze):
+                return True
+            elif nRight.visited and nRight.breeze:
+                nModel.visited = True
+                nModel.pit = True
+                return False
+            elif nRight.visited and nRight.stench:
+                nModel.visited = True
+                nModel.wumpus = True
+                return False
+
 
         return False

@@ -19,6 +19,7 @@ class WumpusWorld:
     def __init__(self,dim):
         self.dim = dim
         app = tk.Tk()
+        self.turnCount=0
         #insert Buttons
         self.startButton = tk.Button(app,text='run',command='')
         self.startButton.grid_propagate(0)
@@ -174,8 +175,10 @@ class WumpusWorld:
         move = self.agent.nextMove(x,y,self.dim)
 
         if self.getPosition(move[0],move[1]).visited == True:
-            self.agent.turn('R')
-            self.step()
+            if self.turnCount < 4:
+                self.agent.turn('R')
+                self.turnCount+=1
+                self.step()
 
         if self.kb.ask([x,y],move,self.agent.compass):
             self.mapper[x][y].grid_remove()
@@ -189,6 +192,7 @@ class WumpusWorld:
 
             self.mapper[x][y].grid_remove()
             self.mapper[x][y]=None
+            print self.agent.visited
             back = self.agent.visited.pop()
             self.placeHunter(back[0],back[1])
             self.agent.visited.pop()
