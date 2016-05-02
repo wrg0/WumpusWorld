@@ -146,7 +146,7 @@ class KnowledgeBase():
             elif nRight.visited and nRight.stench:
                 nModel.visited = True
                 nModel.wumpus = True
-                print 'wumpus in: {}, {}'.format(nX,nY)                
+                print 'wumpus in: {}, {}'.format(nX,nY)
                 return False
 
 
