@@ -23,6 +23,7 @@ class WumpusWorld:
         app = tk.Tk()
         self.turnCount=0
         self.goldLoc = None
+        self.wumpusLoc = None
         #insert Buttons
         self.startButton = tk.Button(app,text='run',command='')
         self.startButton.grid_propagate(0)
@@ -166,6 +167,7 @@ class WumpusWorld:
             self.mapper[x][y].grid(row=x,column=y)
         elif type == WUMPUS:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.wumpus_img)
+            self.wumpusLoc = self.mapper[x][y]
             self.mapper[x][y].grid(row=x,column=y)
         elif type == PIT:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.pit_img)
@@ -221,6 +223,9 @@ class WumpusWorld:
 
         elif answer == WUMPUS:
             print 'have to kill wumpus'
+            self.agent.shoot()
+            self.wumpusLoc.grid_remove()
+            self.kb.tell(x,y,[KILLED_WUMPUS])
 
         else:
             if self.agent.getDirection() == 'L':

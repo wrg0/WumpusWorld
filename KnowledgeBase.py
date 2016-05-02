@@ -29,6 +29,8 @@ class KnowledgeBase():
                     model.gold == True
                 elif p == GLITTER:
                     model.glitter = True
+                elif p == KILLED_WUMPUS:
+                    model.wumpus = False
 
             print 'told kb: {}'.format(self.models[x][y].toString())
 
