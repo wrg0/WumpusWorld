@@ -106,7 +106,7 @@ class WumpusWorld:
 
         for x in percepts:
             if x == GOLD:
-                self.mapper[self.goldLoc[0]][self.goldLoc[1]].grid_remove()
+                self.goldLoc.grid_remove()
                 return True
 
         return False
@@ -172,8 +172,8 @@ class WumpusWorld:
             self.mapper[x][y].grid(row=x,column=y)
         elif type == GOLD:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.gold_img)
+            self.goldLoc = self.mapper[x][y]
             self.mapper[x][y].grid(row=x,column=y)
-            self.goldLoc = [x,y]
 
     def initWorld(self):
         self.agent = Agent()
