@@ -6,6 +6,7 @@
 
 import random
 import Tkinter as tk
+import time
 from WumpusWorldVars import *
 from Position import *
 from PIL import Image, ImageTk
@@ -14,12 +15,14 @@ from KnowledgeBase import *
 from Sentence import *
 
 
+
 class WumpusWorld:
 
     def __init__(self,dim):
         self.dim = dim
         app = tk.Tk()
         self.turnCount=0
+        self.goldLoc = None
         #insert Buttons
         self.startButton = tk.Button(app,text='run',command='')
         self.startButton.grid_propagate(0)
@@ -80,8 +83,33 @@ class WumpusWorld:
         self.updatepositionImage(x,y,HUNTER)
         position = self.getPosition(x,y)
         position.setAsVisited()
-        self.kb.tell(x,y,position.percepts)
+        if self.checkForGold(x,y):
+            self.pickUpGold()
+        else:
+            self.kb.tell(x,y,position.percepts)
 
+    def pickUpGold(self):
+        print 'picked up gold'
+        pos = self.agent.visited.pop()
+        self.mapper[pos[0]][pos[1]].grid_remove()
+
+        while len(self.agent.visited) > 1:
+            pos = self.agent.visited.pop()
+            self.insertWidget(pos[0],pos[1],HUNTER)
+            time.sleep(.5)
+
+        self.insertWidget(0,0,HUNTER)
+
+
+    def checkForGold(self,x,y):
+        percepts = self.getPosition(x,y).percepts
+
+        for x in percepts:
+            if x == GOLD:
+                self.mapper[self.goldLoc[0]][self.goldLoc[1]].grid_remove()
+                return True
+
+        return False
 
 
     def placeGold(self):
@@ -145,6 +173,7 @@ class WumpusWorld:
         elif type == GOLD:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.gold_img)
             self.mapper[x][y].grid(row=x,column=y)
+            self.goldLoc = [x,y]
 
     def initWorld(self):
         self.agent = Agent()
@@ -175,7 +204,7 @@ class WumpusWorld:
         move = self.agent.nextMove(x,y,self.dim)
 
         if self.getPosition(move[0],move[1]).visited == True:
-            if self.turnCount < 5:
+            if self.turnCount < 4:
                 self.agent.turn('R')
                 self.turnCount+=1
                 self.step()
@@ -184,8 +213,9 @@ class WumpusWorld:
 
         if self.kb.ask([x,y],move,self.agent.compass):
             print 'removing x:{},y:{}'.format(x,y)
-            self.mapper[x][y].grid_remove()
-            self.mapper[x][y]=None
+            if type(self.mapper[x][y]) != None:
+                self.mapper[x][y].grid_remove()
+                self.mapper[x][y]=None
             self.placeHunter(move[0],move[1])
         else:
             if self.agent.getDirection() == 'L':
@@ -193,9 +223,15 @@ class WumpusWorld:
             else:
                 self.agent.turn('L')
 
-            self.mapper[x][y].grid_remove()
-            self.mapper[x][y]=None
+            if type(self.mapper[x][y]) != None:
+                self.mapper[x][y].grid_remove()
+                self.mapper[x][y]=None
+
             print self.agent.visited
-            self.agent.visited.pop()
-            back = self.agent.visited.pop()
-            self.placeHunter(back[0],back[1])
+            if len(self.agent.visited) > 1:
+                self.agent.visited.pop()
+                back = self.agent.visited.pop()
+                self.placeHunter(back[0],back[1])
+            else:
+                print "can't get to gold"
+                self.app.quit

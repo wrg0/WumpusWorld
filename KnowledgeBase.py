@@ -64,7 +64,6 @@ class KnowledgeBase():
             else:
                 nLeft = None
 
-
         if compass == 'S':
 
             #next right & left
@@ -75,9 +74,9 @@ class KnowledgeBase():
 
             if nX+1 < self.dim:
                 nLeft = self.models[nX+1][nY]
+                nLpos = [nX+1,nY]
             else:
                 nLeft = None
-
 
         if compass == 'E':
 
@@ -115,10 +114,13 @@ class KnowledgeBase():
             and nLeft.breeze and nRight.breeze:
                 nModel.visited = True
                 nModel.pit = True
+                return False
             elif nLeft.visited and nRight.visited\
             and nLeft.stench and nRight.stench:
                 nModel.visited = True
                 nModel.wumpus = True
+                print 'wumpus in: {}, {}'.format(nX,nY)
+                return False
 
         elif nLeft != None and nRight == None:
             if nLeft.visited\
@@ -131,6 +133,7 @@ class KnowledgeBase():
             elif nLeft.visited and nLeft.stench:
                 nModel.visited = True
                 nModel.wumpus = True
+                print 'wumpus in: {}, {}'.format(nX,nY)
                 return False
         elif nRight != None and nLeft == None:
             if nRight.visited\
@@ -143,6 +146,7 @@ class KnowledgeBase():
             elif nRight.visited and nRight.stench:
                 nModel.visited = True
                 nModel.wumpus = True
+                print 'wumpus in: {}, {}'.format(nX,nY)                
                 return False
 
 
