@@ -96,7 +96,7 @@ class WumpusWorld:
         while len(self.agent.visited) > 1:
             pos = self.agent.visited.pop()
             self.insertWidget(pos[0],pos[1],HUNTER)
-            time.sleep(.5)
+            self.mapper[pos[0]][pos[1]].grid_remove()
 
         self.insertWidget(0,0,HUNTER)
 
@@ -211,12 +211,17 @@ class WumpusWorld:
             else:
                 self.turnCount = 0
 
-        if self.kb.ask([x,y],move,self.agent.compass):
+        answer = self.kb.ask([x,y],move,self.agent.compass)
+        if answer == True:
             print 'removing x:{},y:{}'.format(x,y)
             if type(self.mapper[x][y]) != None:
                 self.mapper[x][y].grid_remove()
                 self.mapper[x][y]=None
             self.placeHunter(move[0],move[1])
+
+        elif answer == WUMPUS:
+            print 'have to kill wumpus'
+
         else:
             if self.agent.getDirection() == 'L':
                 self.agent.turn('R')
