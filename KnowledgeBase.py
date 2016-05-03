@@ -105,16 +105,24 @@ class KnowledgeBase():
             else:
                 cLeft = None
 
-        # current is stench and right is wall
-        if cModel.stench == True and (type(nRight) == None or type(nLeft) == None):
-                print 'wumpus in: {}, {}'.format(nX,nY)
-                return WUMPUS
 
-        elif cModel.stench == True:
-            if type(nRight) != None and type(nLeft) != None:
-                if nRight.stench == True or nRight.stench == True:
+        if cModel.stench == True:
+            if nRight != None and nLeft != None:
+                if nRight.stench == True or nLeft.stench == True:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
+            elif nLeft != None:
+                if nLeft.stench == True:
+                    print 'wumpus in: {}, {}'.format(nX,nY)
+                    return WUMPUS
+            elif nRight != None:
+                if nRight.stench == True:
+                    print 'wumpus in: {}, {}'.format(nX,nY)
+                    return WUMPUS
+            elif nLeft == None or nRight:
+                    print 'wumpus in: {}, {}'.format(nX,nY)
+                    return WUMPUS
+
 
         #check for pit and wumpus
         #visited both next left and right

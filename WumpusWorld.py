@@ -207,9 +207,10 @@ class WumpusWorld:
 
         if self.getPosition(move[0],move[1]).visited == True:
             if self.turnCount < 4:
-                self.agent.turn('R')
+                self.agent.turn('L')
                 self.turnCount+=1
                 self.step()
+                return
             else:
                 self.turnCount = 0
 
