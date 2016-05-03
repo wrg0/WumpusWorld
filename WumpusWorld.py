@@ -164,18 +164,18 @@ class WumpusWorld:
         print 'inserting: {} : ({},{})'.format(type,x,y)
         if type == HUNTER:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.hunter_img)
-            self.mapper[x][y].grid(row=x,column=y)
+            self.mapper[x][y].grid(column=x,row=y)
         elif type == WUMPUS:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.wumpus_img)
             self.wumpusLoc = self.mapper[x][y]
-            self.mapper[x][y].grid(row=x,column=y)
+            self.mapper[x][y].grid(column=x,row=y)
         elif type == PIT:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.pit_img)
-            self.mapper[x][y].grid(row=x,column=y)
+            self.mapper[x][y].grid(column=x,row=y)
         elif type == GOLD:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.gold_img)
             self.goldLoc = self.mapper[x][y]
-            self.mapper[x][y].grid(row=x,column=y)
+            self.mapper[x][y].grid(column=x,row=y)
 
     def initWorld(self):
         self.agent = Agent()

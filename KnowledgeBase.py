@@ -106,12 +106,12 @@ class KnowledgeBase():
                 cLeft = None
 
         # current is stench and right is wall
-        if cModel.stench == True and (nRight == None or nLeft == None):
+        if cModel.stench == True and (type(nRight) == None or type(nLeft) == None):
                 print 'wumpus in: {}, {}'.format(nX,nY)
                 return WUMPUS
 
         elif cModel.stench == True:
-            if nRight != None and nLeft != None:
+            if type(nRight) != None and type(nLeft) != None:
                 if nRight.stench == True or nRight.stench == True:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
