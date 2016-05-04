@@ -21,6 +21,7 @@ class WumpusWorld:
     def __init__(self,dim):
         self.dim = dim
         app = tk.Tk()
+        app.wm_title('Wumpus World')
         self.turnCount=0
         self.goldLoc = None
         self.wumpusLoc = None
