@@ -24,6 +24,7 @@ class WumpusWorld:
         self.turnCount=0
         self.goldLoc = None
         self.wumpusLoc = None
+        self.wumpusCell = None
         #insert Buttons
         self.startButton = tk.Button(app,text='run',command='')
         self.startButton.grid_propagate(0)
@@ -167,7 +168,8 @@ class WumpusWorld:
             self.mapper[x][y].grid(column=x,row=y)
         elif type == WUMPUS:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.wumpus_img)
-            self.wumpusLoc = self.mapper[x][y]
+            self.wumpusCell = self.mapper[x][y]
+            self.wumpusLoc = [x,y]
             self.mapper[x][y].grid(column=x,row=y)
         elif type == PIT:
             self.mapper[x][y]=tk.Label(self.container,height=75,width=75,image=self.pit_img)
@@ -205,7 +207,22 @@ class WumpusWorld:
         position = self.getPosition(x,y)
         move = self.agent.nextMove(x,y,self.dim)
 
-        if self.getPosition(move[0],move[1]).visited == True:
+        #check if stench present
+        if self.kb.models[x][y].stench == True\
+        and self.kb.models[move[0]][move[1]].wumpus == None:
+            #check if WHUMPUS present
+            if self.kb.ask([x,y],move,self.agent.compass) == WUMPUS:
+                print 'found wumpus'
+            elif self.turnCount < 4:
+                self.agent.turn('R')
+                self.turnCount+=1
+                self.step()
+                return
+            else:
+                self.turnCount = 0
+
+        #check if safe to move forward
+        if self.getPosition(move[0],move[1]).visited == True :
             if self.turnCount < 4:
                 self.agent.turn('L')
                 self.turnCount+=1
@@ -215,6 +232,7 @@ class WumpusWorld:
                 self.turnCount = 0
 
         answer = self.kb.ask([x,y],move,self.agent.compass)
+        print 'answer: {}'.format(answer)
         if answer == True:
             print 'removing x:{},y:{}'.format(x,y)
             if type(self.mapper[x][y]) != None:
@@ -222,11 +240,12 @@ class WumpusWorld:
                 self.mapper[x][y]=None
             self.placeHunter(move[0],move[1])
 
+        # kill wumpus and update KB
         elif answer == WUMPUS:
             print 'have to kill wumpus'
             self.agent.shoot()
-            self.wumpusLoc.grid_remove()
-            self.kb.tell(x,y,[KILLED_WUMPUS])
+            self.wumpusCell.grid_remove()
+            self.kb.tell(self.wumpusLoc[0],self.wumpusLoc[1],[KILLED_WUMPUS])
 
         else:
             if self.agent.getDirection() == 'L':
@@ -234,9 +253,8 @@ class WumpusWorld:
             else:
                 self.agent.turn('L')
 
-            if type(self.mapper[x][y]) != None:
-                self.mapper[x][y].grid_remove()
-                self.mapper[x][y]=None
+            self.mapper[x][y].grid_remove()
+            self.mapper[x][y]=None
 
             print self.agent.visited
             if len(self.agent.visited) > 1:

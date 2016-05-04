@@ -31,8 +31,9 @@ class KnowledgeBase():
                     model.glitter = True
                 elif p == KILLED_WUMPUS:
                     model.wumpus = False
+                    model.visited = True
 
-            print 'told kb: {}'.format(self.models[x][y].toString())
+            print 'told kb:({},{}) {}'.format(x,y,self.models[x][y].toString())
 
     def ask(self,current, next, compass):
 
@@ -45,10 +46,9 @@ class KnowledgeBase():
         cModel = self.models[cX][cY]
         nModel = self.models[nX][nY]
 
-        # check if nModel is not safe or unknown if safe
-        if not cModel.breeze and not cModel.stench:
+        # check if nModel is safe or unknown if safe
+        if (not cModel.breeze and not cModel.stench) or nModel.wumpus == False:
             return True
-
 
         nLeft = None
         nRight = None
@@ -60,7 +60,6 @@ class KnowledgeBase():
                 nRight = self.models[nX+1][nY]
             else:
                 nRight = None
-
             if nX-1 > 0:
                 nLeft = self.models[nX-1][nY]
             else:
@@ -106,20 +105,21 @@ class KnowledgeBase():
                 cLeft = None
 
 
-        if cModel.stench == True:
+        if cModel.stench == True and nModel.wumpus == None:
+
+            # no wall to left of right
             if nRight != None and nLeft != None:
                 if nRight.stench == True or nLeft.stench == True:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
-            elif nLeft != None:
+            # to right is wall
+            elif nLeft != None and nRight == None:
                 if nLeft.stench == True:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
-            elif nRight != None:
+            # to left is wall
+            elif nRight != None and nLeft == None:
                 if nRight.stench == True:
-                    print 'wumpus in: {}, {}'.format(nX,nY)
-                    return WUMPUS
-            elif nLeft == None or nRight:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
 
