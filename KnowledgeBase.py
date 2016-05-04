@@ -32,6 +32,9 @@ class KnowledgeBase():
                 elif p == KILLED_WUMPUS:
                     model.wumpus = False
                     model.visited = True
+                    for i in range(self.dim):
+                        for j in range(self.dim):
+                            self.models[i][j].wumpus=False
 
             print 'told kb:({},{}) {}'.format(x,y,self.models[x][y].toString())
 
@@ -46,8 +49,7 @@ class KnowledgeBase():
         cModel = self.models[cX][cY]
         nModel = self.models[nX][nY]
 
-        # check if nModel is safe or unknown if safe
-        if nModel.wumpus == False:
+        if nModel.wumpus == False and cModel.breeze == None:
             return True
 
         if not cModel.breeze and not cModel.stench:
@@ -112,17 +114,20 @@ class KnowledgeBase():
 
             # no wall to left of right
             if nRight != None and nLeft != None:
-                if nRight.stench == True or nLeft.stench == True:
+                if (nRight.stench == True or nLeft.stench == True)\
+                and nModel.wumpus != False:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
             # to right is wall
             elif nLeft != None and nRight == None:
-                if nLeft.stench == True:
+                if nLeft.stench == True\
+                and nModel.wumpus != False:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
             # to left is wall
             elif nRight != None and nLeft == None:
-                if nRight.stench == True:
+                if nRight.stench == True\
+                and nModel.wumpus != False:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
 
@@ -131,7 +136,7 @@ class KnowledgeBase():
         #visited both next left and right
         elif nLeft != None and nRight != None:
             if nLeft.visited and nRight.visited\
-            and (not nLeft.stench) and (not nRight.stench)\
+            and ((not nLeft.stench) and (not nRight.stench) and nModel.wumpus != False)\
             and (not nLeft.breeze) and (not nRight.breeze):
                 return True
             elif nLeft.visited and nRight.visited\
@@ -140,7 +145,7 @@ class KnowledgeBase():
                 nModel.pit = True
                 return False
             elif nLeft.visited and nRight.visited\
-            and nLeft.stench and nRight.stench:
+            and nLeft.stench and nRight.stench and nModel.wumpus != False:
                 nModel.visited = True
                 nModel.wumpus = True
                 print 'wumpus in: {}, {}'.format(nX,nY)

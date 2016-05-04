@@ -209,7 +209,7 @@ class WumpusWorld:
 
         #check if stench present
         if self.kb.models[x][y].stench == True\
-        and self.kb.models[move[0]][move[1]].wumpus == None:
+        and self.kb.models[move[0]][move[1]].wumpus != False:
             #check if WHUMPUS present
             if self.kb.ask([x,y],move,self.agent.compass) == WUMPUS:
                 print 'found wumpus'
