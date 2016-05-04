@@ -47,7 +47,10 @@ class KnowledgeBase():
         nModel = self.models[nX][nY]
 
         # check if nModel is safe or unknown if safe
-        if (not cModel.breeze and not cModel.stench) or nModel.wumpus == False:
+        if nModel.wumpus == False:
+            return True
+
+        if not cModel.breeze and not cModel.stench:
             return True
 
         nLeft = None
