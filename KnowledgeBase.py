@@ -115,19 +115,19 @@ class KnowledgeBase():
             # no wall to left of right
             if nRight != None and nLeft != None:
                 if (nRight.stench == True or nLeft.stench == True)\
-                and nModel.wumpus != False:
+                and nModel.wumpus == None:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
             # to right is wall
             elif nLeft != None and nRight == None:
-                if nLeft.stench == True\
-                and nModel.wumpus != False:
+                if cModel.stench == True and nLeft.stench == True\
+                and nModel.wumpus == None:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
             # to left is wall
             elif nRight != None and nLeft == None:
-                if nRight.stench == True\
-                and nModel.wumpus != False:
+                if cModel.stench == True and nRight.stench == True\
+                and nModel.wumpus == None:
                     print 'wumpus in: {}, {}'.format(nX,nY)
                     return WUMPUS
 

@@ -224,7 +224,7 @@ class WumpusWorld:
         #check if safe to move forward
         if self.getPosition(move[0],move[1]).visited == True :
             if self.turnCount < 4:
-                self.agent.turn('L')
+                self.agent.turn('R')
                 self.turnCount+=1
                 self.step()
                 return
